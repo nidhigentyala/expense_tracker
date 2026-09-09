@@ -3,3 +3,9 @@ __pycache__/
 *.pyc
 venv/
 .venv/
+.idea/
+.vscode/
+alembic/env.py
+alembic/script.py.mako
+alembic.ini
+alembic/README
