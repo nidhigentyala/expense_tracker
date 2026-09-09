@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends,APIRouter
 from typing import Annotated
 from dataacces import models
 from routers.models import ExpenseCreate, UpdateExpense, BudgetCreate, ExpenseCreateError
@@ -9,7 +9,7 @@ from config.session import get_db
 from business_logic.tracker_logic import ServicelayerOrBusinessLogic
 from business_logic.budget_logic import BudgetBusinessLogic
 
-budget_app = FastAPI(title="Personal Expense Tracker")
+budget_app = APIRouter()
 
 
 # POST - Create Budget
@@ -73,3 +73,8 @@ async def get_budget_by_user_id(user_id:int, db:Session = Depends(get_db)):
     except Exception as e:
         print(f"str{e}")
         raise HTTPException(detail="Unable to get budget by user id at the moment", status_code=400)
+
+## Health endpoint need to add TODO
+@budget_app.get("/health")
+async def health():
+    return {"status": "ok"}

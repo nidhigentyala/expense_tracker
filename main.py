@@ -4,12 +4,14 @@ from routers.budget import budget_app
 
 app=FastAPI(title="Personal Expense Tracker")
 
-app.mount("/budget", budget_app)
+app.include_router(tracker_app, prefix="/tracker", tags=["Tracker"])
+app.include_router(budget_app, prefix="/budget", tags=["Budget"])
 
-app.mount("/tracker", tracker_app)
+# app.mount("/budget", budget_app)
+
+# app.mount("/tracker", tracker_app)
 
 
-## Health endpoint need to add TODO
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+
+
+

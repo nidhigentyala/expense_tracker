@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, APIRouter
 from typing import Annotated
 from dataacces import models
 from routers.models import ExpenseCreate, UpdateExpense, BudgetCreate, ExpenseCreateError
@@ -8,7 +8,7 @@ from config.session import get_db
 
 from business_logic.tracker_logic import ServicelayerOrBusinessLogic
 
-tracker_app = FastAPI(title="Personal Expense Tracker")
+tracker_app = APIRouter()
 
 
 # POST - Create Task
@@ -103,3 +103,9 @@ async def get_all_expenses_by_user_id(user_id: int, db: Session = Depends(get_db
             detail = "Expenses not available with this user id or Invalid user id"
         )
     return service_response
+
+
+## Health endpoint need to add TODO
+@tracker_app.get("/health")
+async def health():
+    return {"status": "ok"}
