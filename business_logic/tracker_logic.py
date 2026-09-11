@@ -15,6 +15,7 @@ class ServicelayerOrBusinessLogic:
         try:
             print(f"Request {expense_create}")
             create_new_expense = Expense(
+                id = expense_create.id,
                 title = expense_create.title,
                 amount = expense_create.amount,
                 category = expense_create.category,
@@ -57,6 +58,7 @@ class ServicelayerOrBusinessLogic:
                 expense = self.tracker_repo.get_expense_by_id(expense_id)
                 if expense is None:
                     return None
+                expense.id = updated_expense.id
                 expense.title = updated_expense.title
                 expense.amount = updated_expense.amount
                 expense.category = updated_expense.category

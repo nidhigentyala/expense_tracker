@@ -14,6 +14,7 @@ class BudgetBusinessLogic:
                 try:
                     print(f"Request {budget_create}")
                     create_new_budget= Budget(
+                        budget_id = budget_create.budget_id,
                         budget_amount = budget_create.budget_amount,
                         total_spent = budget_create.total_spent,
                         remaining_amt = budget_create.remaining_amt,
