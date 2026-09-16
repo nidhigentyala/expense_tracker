@@ -4,6 +4,7 @@ from dataacces.models import Expense,Budget
 
 
 class ExpenseCreate(BaseModel):
+    id :int
     title: str
     amount: int
     category: str
@@ -46,6 +47,7 @@ class UpdateExpense(ExpenseCreate):
     
 
 class BudgetCreate(BaseModel):
+    budget_id :int
     budget_amount : int
     total_spent : int
     remaining_amt : int

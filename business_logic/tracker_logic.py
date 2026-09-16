@@ -15,6 +15,7 @@ class ServicelayerOrBusinessLogic:
         try:
             print(f"Request {expense_create}")
             create_new_expense = Expense(
+                id = expense_create.id,
                 title = expense_create.title,
                 amount = expense_create.amount,
                 category = expense_create.category,
@@ -33,14 +34,8 @@ class ServicelayerOrBusinessLogic:
 
     # get all expenses 
     async def get_all_expenses(self):
-            try:
-                db_result = self.tracker_repo.get_expenses()
-                expenses = []
-                for expense in db_result :
-                    expenses.append(ExpenseCreate.from_db(expense))
-                return expenses
-            except :
-                print("Unable to get all expenses")
+            db_result = self.tracker_repo.get_expenses()
+            return [ExpenseCreate.from_db(expense) for expense in db_result]
 
     # get expense by id
     async def get_expense_by_id(self,id:int):

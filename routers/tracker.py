@@ -19,8 +19,8 @@ async def create_expense(expense: ExpenseCreate, db: Session = Depends(get_db)):
         service_logic = ServicelayerOrBusinessLogic(db_session=db)
         service_response = await service_logic.create_new_expense(expense)
         print(f"Response from the service layer is {service_response}")
-        #return ExpenseCreate.model_dump(service_response)
-        return service_response
+        return ExpenseCreate.model_dump(service_response)
+        #return service_response
 
     except Exception as e:
         print(f"Error creating expense : {e}")
@@ -34,7 +34,8 @@ async def get_all_expenses(db: Session = Depends(get_db)):
         service_logic = ServicelayerOrBusinessLogic(db_session=db)
         service_response = await service_logic.get_all_expenses()
         return service_response
-    except :
+    except Exception as e:
+        print(f"Error fetching expense : {e}")
         raise HTTPException(detail="Unable to get all expenses at the moment", status_code=400)
 
 
