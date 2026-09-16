@@ -15,7 +15,6 @@ class ServicelayerOrBusinessLogic:
         try:
             print(f"Request {expense_create}")
             create_new_expense = Expense(
-                id = expense_create.id,
                 title = expense_create.title,
                 amount = expense_create.amount,
                 category = expense_create.category,
