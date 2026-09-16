@@ -34,8 +34,9 @@ class ServicelayerOrBusinessLogic:
 
     # get all expenses 
     async def get_all_expenses(self):
-            db_result = self.tracker_repo.get_expenses()
-            return [ExpenseCreate.from_db(expense) for expense in db_result]
+        return self.db_session.query(Expense).all()
+            # db_result = self.tracker_repo.get_expenses()
+            # return [ExpenseCreate.from_db(expense) for expense in db_result]
 
     # get expense by id
     async def get_expense_by_id(self,id:int):
