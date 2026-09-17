@@ -25,8 +25,9 @@ async def create_budget(budget: BudgetCreate, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(f"str{e}")
-
         raise HTTPException(detail="Unable to create Budget at the momemt", status_code=400)
+
+
 
 # GET - Get Budget Status
 @budget_app.get("/status")
@@ -43,6 +44,15 @@ async def get_budget_status(db: Session = Depends(get_db)):
     except Exception as e:
         print(f"str{e}")
         raise HTTPException(detail="Unable to get budget status at the moment", status_code=400)
+
+# DELETE - Delete an expense
+@budget_app.delete("/budget/{budget_id}")
+async def delete_budget(budget_id: int, db: Session = Depends(get_db)):
+    service_logic = BudgetBusinessLogic(db_session=db)
+    service_response = await service_logic.delete_budget(budget_id)
+    if service_response is None:
+        raise HTTPException(detail="Budget not found to delete", status_code=404)
+    return {"message": f"Budget with id {budget_id} deleted successfully"}
 
 # GET - Get Budget by id
 @budget_app.get("/budget/{budget_id}")

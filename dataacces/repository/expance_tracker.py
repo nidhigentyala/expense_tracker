@@ -33,9 +33,11 @@ class ExpenseTrackerRepo :
             return None
         self.db.delete(expense)
         self.db.commit()
+        return expense
 
     def get_expenses_by_category(self, category: str):
-        return self.db.query(Expense).filter(Expense.category == category).all()
+        category = category.lower().strip()
+        return self.db.query(Expense).filter(Expense.category.ilike(category)).all()
 
     def get_all_expenses_by_date(self,date : str) :
         return self.db.query(Expense).filter(Expense.date == date).all()    

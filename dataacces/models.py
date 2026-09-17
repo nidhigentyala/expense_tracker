@@ -27,5 +27,4 @@ class Budget(Base):
     user_name = Column(String)
 
 
-
 ##### DB Models (Sqlalchemy Models)

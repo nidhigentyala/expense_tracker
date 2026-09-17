@@ -14,7 +14,7 @@ class BudgetBusinessLogic:
                 try:
                     print(f"Request {budget_create}")
                     create_new_budget= Budget(
-                        budget_id = budget_create.budget_id,
+                        id = budget_create.budget_id,
                         budget_amount = budget_create.budget_amount,
                         total_spent = budget_create.total_spent,
                         remaining_amt = budget_create.remaining_amt,
@@ -40,14 +40,17 @@ class BudgetBusinessLogic:
                     print(f"Unable to get budget status")
 
     async def get_budget_by_id(self, id :int):
-                try :
-                    db_result = self.budget_repo.get_budget_by_id(id)
-                    if not db_result:
-                        return None
-                    print(f"DB Result is {BudgetCreate.from_db(db_result)}")
-                    return BudgetCreate.from_db(db_result)
-                except :
-                    print(f"Unable to get budget by id {id}")
+            return self.db_session.query(Budget).filter(Budget.id == id).first()
+
+
+    async def delete_budget(self,id:int):
+        try :
+            db_result = self.budget_repo.delete_budget(id)
+            if db_result is None :
+                return None
+            return {"message" : "Budget deleted successfully"}
+        except :
+            print(f"can't find budget with id {id}")
 
     async def get_budget_by_user_id(self, user_id :int):
                 try :

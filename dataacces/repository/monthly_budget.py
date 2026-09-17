@@ -42,6 +42,14 @@ class BudgetTrackerRepo :
                 )
         return results
 
+    def delete_budget(self,id :int):
+            budget = self.db.query(Budget).filter(Budget.id == id).first()
+            if budget is None:
+                return None
+            self.db.delete(budget)
+            self.db.commit()
+            return budget
+
     def get_budget_by_id(self,id : int):
         return self.db.query(Budget).filter(Budget.id == id).first()
 

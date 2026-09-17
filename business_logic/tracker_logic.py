@@ -3,6 +3,7 @@ from dataacces.repository.expance_tracker import ExpenseTrackerRepo
 from dataacces.repository.monthly_budget import BudgetTrackerRepo
 from business_logic.models import ExpenseCreate,UpdateExpense,BudgetCreate
 from dataacces.models import Expense,Budget
+from datetime import datetime
 
 class ServicelayerOrBusinessLogic:
     def __init__(self, db_session:Session):
@@ -35,18 +36,11 @@ class ServicelayerOrBusinessLogic:
     # get all expenses 
     async def get_all_expenses(self):
         return self.db_session.query(Expense).all()
-            # db_result = self.tracker_repo.get_expenses()
-            # return [ExpenseCreate.from_db(expense) for expense in db_result]
 
     # get expense by id
     async def get_expense_by_id(self,id:int):
-            try:
-                db_result = self.tracker_repo.get_expense_by_id(id)
-                if db_result is None:
-                    return None
-                return ExpenseCreate.from_db(db_result)
-            except :
-                print(f"Unable to get expense by id {id}")
+            return self.db_session.query(Expense).filter(Expense.id == id).first()
+            
     # update expense 
     async def update_expense(self,expense_id: int,updated_expense: UpdateExpense):
             try :
@@ -80,6 +74,7 @@ class ServicelayerOrBusinessLogic:
     # get expenses by category
     async def get_expenses_by_category(self, category: str):
             try :
+                category = category.lower().strip()
                 db_result = self.tracker_repo.get_expenses_by_category(category)
                 if db_result is None :
                     return None
@@ -91,15 +86,67 @@ class ServicelayerOrBusinessLogic:
                 print(f"Can't find the expense with category {category}")
 
     # get all expenses by date
-    async def get_all_expenses_by_date(self,date : str) :
-            try:
-                db_result = self.tracker_repo.get_all_expenses_by_date(date)
-                if not db_result :
-                    return None
-                print(f"DB Result is {[ExpenseCreate.from_db(expense) for expense in db_result]}")
-                return [ExpenseCreate.from_db(expense) for expense in db_result]
-            except :
-                print(f"Can't find the expense with date {date}")
+    # async def get_all_expenses_by_date(self,date : str) :
+    #         try:
+    #             db_result = self.tracker_repo.get_all_expenses_by_date(date)
+    #             if not db_result :
+    #                 return None
+    #             print(f"DB Result is {[ExpenseCreate.from_db(expense) for expense in db_result]}")
+    #             return [ExpenseCreate.from_db(expense) for expense in db_result]
+    #         except :
+    #             print(f"Can't find the expense with date {date}")
+
+    # get all expenses by date
+    async def get_all_expenses_by_date(self, date: str):
+        try:
+            date = date.strip()
+
+            # Remove st, nd, rd, th
+            date = (
+                date.replace("st", "")
+                    .replace("nd", "")
+                    .replace("rd", "")
+                    .replace("th", "")
+            )
+
+            date_formats = [
+                "%d-%m-%Y",
+                "%d/%m/%Y",
+                "%Y-%m-%d",
+                "%d %B %Y",
+                "%d %b %Y"
+            ]
+
+            normalized_date = None
+
+            for fmt in date_formats:
+                try:
+                    normalized_date = datetime.strptime(
+                        date.strip(), fmt
+                    ).strftime("%d-%m-%Y")
+                    break
+                except ValueError:
+                    continue
+
+            if normalized_date is None:
+                print(f"Invalid date format: {date}")
+                return None
+
+            db_result = self.tracker_repo.get_all_expenses_by_date(
+                normalized_date
+            )
+
+            if not db_result:
+                return None
+
+            return [
+                ExpenseCreate.from_db(expense)
+                for expense in db_result
+            ]
+
+        except Exception as e:
+            print(f"Can't find the expense with date {date}: {e}")
+            return None
 
     # get all expenses by user id
     async def get_all_expenses_by_user_id(self,user_id : int):

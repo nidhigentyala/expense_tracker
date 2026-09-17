@@ -58,7 +58,7 @@ class BudgetCreate(BaseModel):
     @classmethod
     def from_db(cls, db_model: Budget):
         return cls (
-            budget_id = db_model.budget_id,
+            budget_id = db_model.id,
             budget_amount = db_model.budget_amount,
             total_spent = db_model.total_spent, 
             remaining_amt = db_model.remaining_amt,
